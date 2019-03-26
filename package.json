@@ -1,0 +1,13 @@
+{
+  "name": "mskbot",
+  "version": "1.0.0",
+  "description": "A Discord bot for MSK",
+  "scripts": {
+    "start": "node ./app.js"
+  },
+  "author": "f4dev",
+  "license": "MIT",
+  "dependencies": {
+    "discord.js": "latest"
+  }
+}
