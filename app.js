@@ -1,10 +1,11 @@
+const Discord = require("discord.js"),
+      client  = new Discord.Client(),
+      fs      = require("fs"),
+      path    = require("path");
+
 global.appRoot = path.resolve(__dirname);
 
-const Discord = require("discord.js"),
-      client  = Discord.Client(),
-      fs      = require("fs"),
-
-      config  = require(global.appRoot + "/config.json");
+const config = require(global.appRoot + "/config.json");
 
 // Register events
 fs.readdir("./events/", (err, files) => {
