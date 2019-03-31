@@ -16,18 +16,18 @@ exports.run = (guild, role) => {
             }
         ])
              .then((category) => {
-                 guild.createChannel(names.channel)
+                 guild.createChannel(names.channel, "text", [
+                     {
+                         id:   guild.defaultRole.id,
+                         deny: ["VIEW_CHANNEL"]
+                     },
+                     {
+                         id:    role.id,
+                         allow: ["VIEW_CHANNEL"]
+                     }
+                 ])
                       .then((channel) => {
-                          channel.setParent(category, 'text', [
-                              {
-                                  id:   guild.defaultRole.id,
-                                  deny: ["VIEW_CHANNEL"]
-                              },
-                              {
-                                  id:    role.id,
-                                  allow: ["VIEW_CHANNEL"]
-                              }
-                          ]);
+                          channel.setParent(category);
                       })
                       .catch(console.error);
              })

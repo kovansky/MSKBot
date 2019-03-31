@@ -9,5 +9,8 @@
         "text": ""
       }
     ]
+  },
+  "cities": {
+    "defaultColor": "#eaf41a"
   }
 }
