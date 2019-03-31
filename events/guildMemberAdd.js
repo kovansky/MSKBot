@@ -8,11 +8,13 @@ exports.run = (client, member) => {
             replacements = {
                 keys:   [
                     "%server%",
-                    "%user%"
+                    "%user%",
+                    "%prefix%"
                 ],
                 values: [
                     member.guild.name,
-                    member.user.username
+                    member.user.username,
+                    config.prefix
                 ]
             };
 

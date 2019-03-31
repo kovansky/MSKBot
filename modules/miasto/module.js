@@ -42,6 +42,9 @@ exports.run = (sql, client, message, [command, ...args]) => {
                 });
             });
             break;
+        case null:
+            message.reply("usage");
+            break;
         default:
             sql.serialize(() => {
                 sql.get("select id, name, role from cities where name = ?", [command], (err, row) => {
@@ -50,43 +53,45 @@ exports.run = (sql, client, message, [command, ...args]) => {
                     }
 
                     let role;
-                    guild.fetchMember(message.author)
-                         .then((member) => {
-                             if(row !== undefined) {
-                                 role = global.guild.roles.get(row.role);
+                    global.guild.fetchMember(message.author)
+                          .then((member) => {
+                              if(row !== undefined) {
+                                  role = global.guild.roles.get(row.role);
 
-                                 if(!member.roles.has(role.id)) {
-                                     member.addRole(role).catch(console.error);
+                                  if(!member.roles.has(role.id)) {
+                                      member.addRole(role).catch(console.error);
 
-                                     message.reply(`dodano do ${command}`);
+                                      message.reply(`dodano do ${command}`);
 
-                                     createRelatedChannels.run(global.guild, role);
-                                 } else {
-                                     message.reply(`już jesteś w ${command}`);
-                                 }
-                             } else if(global.guild !== null && global.guild !== undefined && global.guild.roles.find(role => role.name === command)) {
-                                 role = global.guild.roles.find(role => role.name === command);
+                                      createRelatedChannels.run(global.guild, role);
+                                  } else {
+                                      message.reply(`już jesteś w ${command}`);
+                                  }
+                              } else if(global.guild !== null && global.guild !== undefined && global.guild.roles.find(role => role.name === command)) {
+                                  role = global.guild.roles.find(role => role.name === command);
 
-                                 if(!member.roles.has(role.id)) {
-                                     member.addRole(role).catch(console.error);
+                                  if(!member.roles.has(role.id)) {
+                                      member.addRole(role).catch(console.error);
 
-                                     message.reply(`dodano do ${command}`);
+                                      message.reply(`dodano do ${command}`);
 
-                                     createRelatedChannels.run(global.guild, role);
-                                 } else {
-                                     message.reply(`już jesteś w ${command}`);
-                                 }
+                                      createRelatedChannels.run(global.guild, role);
+                                  } else {
+                                      message.reply(`już jesteś w ${command}`);
+                                  }
 
-                                 sql.run("insert into cities (name, role) VALUES (?, ?)", [command, role.id], (err) => {
-                                     if(err) {
-                                         console.error(err);
-                                     }
-                                 });
-                             } else {
-                                 message.reply(`tego miasta jeszcze nie mamy.\nJeśli chcesz je dodać, wpisz \`${config.prefix}miasto dodaj ${command}\``);
-                             }
-                         })
-                         .catch(console.error);
+                                  sql.run("insert into cities (name, role) VALUES (?, ?)", [
+                                      command, role.id
+                                  ], (err) => {
+                                      if(err) {
+                                          console.error(err);
+                                      }
+                                  });
+                              } else {
+                                  message.reply(`tego miasta jeszcze nie mamy.\nJeśli chcesz je dodać, wpisz \`${config.prefix}miasto dodaj ${command}\``);
+                              }
+                          })
+                          .catch(console.error);
                 });
             });
     }
