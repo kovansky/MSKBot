@@ -17,7 +17,7 @@ exports.run = (client, member) => {
             };
 
         let embed = new Discord.RichEmbed()
-            .setColor("#d8a05d")
+            .setColor("#6AB033")
             .setFooter("MSK Bot by Stanisław Kowański", "https://www.basecode.pro/img/msk.png")
             .setThumbnail("https://www.basecode.pro/img/msk.png");
 

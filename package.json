@@ -8,6 +8,8 @@
   "author": "f4dev",
   "license": "MIT",
   "dependencies": {
-    "discord.js": "latest"
+    "discord.js": "latest",
+    "node-gyp": "^3.8.0",
+    "sqlite3": "^4.0.6"
   }
 }

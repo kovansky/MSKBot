@@ -1,7 +1,9 @@
 const Discord = require("discord.js"),
+      SQLite  = require("sqlite3"),
       client  = new Discord.Client(),
       fs      = require("fs"),
-      path    = require("path");
+      path    = require("path"),
+      sql     = new SQLite.Database("./sqlite/msk.sqlite");
 
 global.appRoot = path.resolve(__dirname);
 
