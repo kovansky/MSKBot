@@ -140,3 +140,4 @@ $RECYCLE.BIN/
 *.lnk
 
 config.json
+/sqlite/msk.sqlite
