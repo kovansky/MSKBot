@@ -6,6 +6,7 @@ const Discord = require("discord.js"),
       sql     = new SQLite.Database("./sqlite/msk.sqlite");
 
 global.appRoot = path.resolve(__dirname);
+global.guild   = null;
 
 const config  = require(global.appRoot + "/config.json"),
       setupdb = require(global.appRoot + "/setupdb");
@@ -41,9 +42,9 @@ client.on("message", message => {
     try {
         let moduleFile = require(`./modules/${module}/module.js`);
 
-        console.log(message.author + ": " + args.join(" "));
+        console.log(`${message.author}: ${args.join(" ")} [${module}]`);
 
-        moduleFile.run(config, client, message, args);
+        moduleFile.run(sql, client, message, args);
     } catch(error) {
         console.error(error);
     }

@@ -32,4 +32,6 @@ exports.run = (client, member) => {
             channel.send({embed});
         });
     }
+
+    global.guild = client.guild;
 };
