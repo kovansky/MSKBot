@@ -1,4 +1,5 @@
-const config = require(global.appRoot + "/config.json");
+const config                = require(global.appRoot + "/config.json"),
+      createRelatedChannels = require(global.appRoot + "/utils/createRelatedChannels.js");
 
 exports.run = (sql, client, message, [command, ...args]) => {
     if(message.guild !== null && message.guild !== undefined) {
@@ -18,6 +19,8 @@ exports.run = (sql, client, message, [command, ...args]) => {
                         member.addRole(role).catch(console.error);
 
                         message.reply(`dodano do ${command}`);
+
+                        createRelatedChannels.run(global.guild, role);
 
                         sql.run("insert into cities (name, role) VALUES (?, ?)", [command, role.id], (err) => {
                             if(err) {
