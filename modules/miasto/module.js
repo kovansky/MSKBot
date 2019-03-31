@@ -7,20 +7,39 @@ exports.run = (sql, client, message, [command, ...args]) => {
     }
 
     switch(command) {
+        case "dodaj":
+
+            break;
         default:
             sql.serialize(() => {
                 sql.get("select id, name, role from cities where name = ?", [command], (err, row) => {
+                    let role, member;
+                    member = message.member;
+
                     if(row !== undefined) {
+                        role = global.guild.roles.get(row.role);
 
+                        if(!member.roles.has(role.id)) {
+                            member.addRole(role).catch(console.error);
+
+                            message.reply(`dodano do ${command}`);
+
+                            createRelatedChannels.run(global.guild, role);
+                        } else {
+                            message.reply(`już jesteś w ${command}`);
+                        }
                     } else if(global.guild !== null && global.guild !== undefined && global.guild.roles.find(role => role.name === command)) {
-                        let role   = global.guild.roles.find(role => role.name === command),
-                            member = message.member;
+                        role = global.guild.roles.find(role => role.name === command);
 
-                        member.addRole(role).catch(console.error);
+                        if(!member.roles.has(role.id)) {
+                            member.addRole(role).catch(console.error);
 
-                        message.reply(`dodano do ${command}`);
+                            message.reply(`dodano do ${command}`);
 
-                        createRelatedChannels.run(global.guild, role);
+                            createRelatedChannels.run(global.guild, role);
+                        } else {
+                            message.reply(`już jesteś w ${command}`);
+                        }
 
                         sql.run("insert into cities (name, role) VALUES (?, ?)", [command, role.id], (err) => {
                             if(err) {
