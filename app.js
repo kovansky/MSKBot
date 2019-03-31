@@ -7,7 +7,9 @@ const Discord = require("discord.js"),
 
 global.appRoot = path.resolve(__dirname);
 
-const config = require(global.appRoot + "/config.json");
+const config  = require(global.appRoot + "/config.json"),
+      setupdb = require(global.appRoot + "/setupdb");
+
 
 // Register events
 fs.readdir("./events/", (err, files) => {
@@ -50,4 +52,5 @@ client.on("message", message => {
 // Login to Discord
 client.login(config.token).then(() => {
     console.log("Logged in");
+    setupdb.run(sql);
 });
