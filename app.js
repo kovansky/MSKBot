@@ -19,3 +19,27 @@ fs.readdir("./events/", (err, files) => {
         client.on(eventName, (...args) => eventFunction.run(client, ...args));
     });
 });
+
+// Message reader
+client.on("message", message => {
+    if(message.author.bot) {
+        return;
+    }
+
+    if(message.content.indexOf(config.prefix) !== 0) {
+        return;
+    }
+
+    // Execute command
+    const args   = message.content.slice(config.prefix.length).trim().split(/ +/g);
+    const module = args.shift().toLowerCase();
+    try {
+        let moduleFile = require(`./modules/${module}/module.js`);
+
+        console.log(message.author + ": " + args.join(" "));
+
+        moduleFile.run(config, client, message, args);
+    } catch(error) {
+        console.error(error);
+    }
+});
