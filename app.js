@@ -43,3 +43,8 @@ client.on("message", message => {
         console.error(error);
     }
 });
+
+// Login to Discord
+client.login(config.token).then(() => {
+    console.log("Logged in");
+});
