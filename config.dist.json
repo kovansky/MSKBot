@@ -1,0 +1,16 @@
+{
+  "token": "",
+  "prefix": "!",
+  "welcomeDM": {
+    "enabled": true,
+    "message": [
+      {
+        "title": "Welcome on %server%, %user%!",
+        "text": ""
+      }
+    ]
+  },
+  "cities": {
+    "defaultColor": "#eaf41a"
+  }
+}
