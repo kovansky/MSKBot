@@ -8,16 +8,18 @@ exports.run = (client, member) => {
             replacements = {
                 keys:   [
                     "%server%",
-                    "%user%"
+                    "%user%",
+                    "%prefix%"
                 ],
                 values: [
                     member.guild.name,
-                    member.user.username
+                    member.user.username,
+                    config.prefix
                 ]
             };
 
         let embed = new Discord.RichEmbed()
-            .setColor("#d8a05d")
+            .setColor("#6AB033")
             .setFooter("MSK Bot by Stanisław Kowański", "https://www.basecode.pro/img/msk.png")
             .setThumbnail("https://www.basecode.pro/img/msk.png");
 
@@ -32,4 +34,6 @@ exports.run = (client, member) => {
             channel.send({embed});
         });
     }
+
+    global.guild = client.guild;
 };
