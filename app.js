@@ -47,6 +47,8 @@ client.on("message", message => {
         moduleFile.run(sql, client, message, args);
     } catch(error) {
         console.error(error);
+
+        message.reply("Komenda nieznana");
     }
 });
 
