@@ -3,10 +3,6 @@ const config                = require(global.appRoot + "/config.json"),
       cityModule            = require(global.appRoot + "/modules/miasto/module.js");
 
 exports.run = (sql, client, message, args) => {
-    if(message.guild !== null && message.guild !== undefined) {
-        global.guild = message.guild;
-    }
-
     if(args.length >= 3) {
         global.guild.fetchMember(message.author)
               .then((member) => {

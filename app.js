@@ -39,16 +39,28 @@ client.on("message", message => {
     // Execute command
     const args   = message.content.slice(config.prefix.length).trim().split(/ +/g);
     const module = args.shift().toLowerCase();
-    try {
-        let moduleFile = require(`./modules/${module}/module.js`);
 
-        console.log(`${message.author}: ${args.join(" ")} [${module}]`);
+    // Check if bot activated
+    if(global.botActivated || module === "activate") {
+        // Execute
+        try {
+            let moduleFile = require(`./modules/${module}/module.js`);
 
-        moduleFile.run(sql, client, message, args);
-    } catch(error) {
-        console.error(error);
+            console.log(`${message.author}: ${args.join(" ")} [${module}]`);
 
-        message.reply("Komenda nieznana");
+            moduleFile.run(sql, client, message, args);
+        } catch(error) {
+            console.error(error);
+
+            message.reply("Komenda nieznana");
+        }
+    } else {
+        // Reject execution
+        message.reply("Bot nie jest aktywowany.")
+               .then((reply) => {
+                   message.delete(2000);
+                   reply.delete(2000);
+               });
     }
 });
 
