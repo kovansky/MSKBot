@@ -4,10 +4,6 @@ const config                = require(global.appRoot + "/config.json"),
 exports.run = (sql, client, message, [command, ...args]) => {
     let city;
 
-    if(message.guild !== null && message.guild !== undefined) {
-        global.guild = message.guild;
-    }
-
     if(command !== undefined) {
         switch(command) {
             case "dodaj":
