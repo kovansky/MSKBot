@@ -1,4 +1,4 @@
-exports.run = (guild, role) => {
+exports.run = (client, guild, role) => {
     let names = {
         category: role.name,
         channel:  `ogólny-${role.name.toLowerCase()}`
@@ -24,10 +24,15 @@ exports.run = (guild, role) => {
                      {
                          id:    role.id,
                          allow: ["VIEW_CHANNEL"]
+                     },
+                     {
+                         id:    client.user.id,
+                         allow: ["VIEW_CHANNEL"]
                      }
                  ])
                       .then((channel) => {
-                          channel.setParent(category);
+                          channel.setParent(category)
+                                 .catch(console.error);
                       })
                       .catch(console.error);
              })

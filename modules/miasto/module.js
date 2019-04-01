@@ -2,13 +2,15 @@ const config                = require(global.appRoot + "/config.json"),
       createRelatedChannels = require(global.appRoot + "/utils/createRelatedChannels.js");
 
 exports.run = (sql, client, message, [command, ...args]) => {
+    let city;
+
     if(message.guild !== null && message.guild !== undefined) {
         global.guild = message.guild;
     }
 
     switch(command) {
         case "dodaj":
-            let city = args[0];
+            city = args.join(" ");
 
             sql.serialize(() => {
                 sql.get("select id from cities where name = ?", [city], (err, row) => {
@@ -32,7 +34,7 @@ exports.run = (sql, client, message, [command, ...args]) => {
                                           console.error(err);
                                       }
 
-                                      createRelatedChannels.run(guild, role);
+                                      createRelatedChannels.run(client, guild, role);
 
                                       message.reply(`utworzono ${role.name}`);
                                   });
@@ -42,12 +44,17 @@ exports.run = (sql, client, message, [command, ...args]) => {
                 });
             });
             break;
-        case null:
-            message.reply("usage");
-            break;
         default:
             sql.serialize(() => {
-                sql.get("select id, name, role from cities where name = ?", [command], (err, row) => {
+                city = command;
+
+                if(args.length > 0) {
+                    city += " " + args.join(" ");
+                }
+
+                console.log(city);
+
+                sql.get("select id, name, role from cities where name = ?", [city], (err, row) => {
                     if(err) {
                         console.error(err);
                     }
@@ -61,34 +68,34 @@ exports.run = (sql, client, message, [command, ...args]) => {
                                   if(!member.roles.has(role.id)) {
                                       member.addRole(role).catch(console.error);
 
-                                      message.reply(`dodano do ${command}`);
+                                      message.reply(`dodano do ${city}`);
 
-                                      createRelatedChannels.run(global.guild, role);
+                                      createRelatedChannels.run(client, global.guild, role);
                                   } else {
-                                      message.reply(`już jesteś w ${command}`);
+                                      message.reply(`już jesteś w ${city}`);
                                   }
-                              } else if(global.guild !== null && global.guild !== undefined && global.guild.roles.find(role => role.name === command)) {
-                                  role = global.guild.roles.find(role => role.name === command);
+                              } else if(global.guild !== null && global.guild !== undefined && global.guild.roles.find(role => role.name === city)) {
+                                  role = global.guild.roles.find(role => role.name === city);
 
                                   if(!member.roles.has(role.id)) {
                                       member.addRole(role).catch(console.error);
 
-                                      message.reply(`dodano do ${command}`);
+                                      message.reply(`dodano do ${city}`);
 
-                                      createRelatedChannels.run(global.guild, role);
+                                      createRelatedChannels.run(client, global.guild, role);
                                   } else {
-                                      message.reply(`już jesteś w ${command}`);
+                                      message.reply(`już jesteś w ${city}`);
                                   }
 
                                   sql.run("insert into cities (name, role) VALUES (?, ?)", [
-                                      command, role.id
+                                      city, role.id
                                   ], (err) => {
                                       if(err) {
                                           console.error(err);
                                       }
                                   });
                               } else {
-                                  message.reply(`tego miasta jeszcze nie mamy.\nJeśli chcesz je dodać, wpisz \`${config.prefix}miasto dodaj ${command}\``);
+                                  message.reply(`tego miasta jeszcze nie mamy.\nJeśli chcesz je dodać, wpisz \`${config.prefix}miasto dodaj ${city}\``);
                               }
                           })
                           .catch(console.error);
