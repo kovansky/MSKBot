@@ -56,7 +56,7 @@ client.on("message", message => {
         }
     } else {
         // Reject execution
-        message.reply("Bot nie jest aktywowany.")
+        message.reply("Bot nie jest aktywowany. Skontaktuj się z `kovansky#0451`")
                .then((reply) => {
                    message.delete(2000);
                    reply.delete(2000);
@@ -67,5 +67,6 @@ client.on("message", message => {
 // Login to Discord
 client.login(config.token).then(() => {
     console.log("Logged in");
+    console.log("===");
     setupdb.run(sql);
 });
