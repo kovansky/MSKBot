@@ -1,5 +1,6 @@
 {
   "token": "",
+  "guildId": "",
   "prefix": "!",
   "welcomeDM": {
     "enabled": true,
