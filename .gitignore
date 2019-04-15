@@ -141,3 +141,4 @@ $RECYCLE.BIN/
 
 config.json
 /sqlite/msk.sqlite
+.idea/deployment.xml
