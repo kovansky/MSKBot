@@ -1,5 +1,5 @@
 const config                = require(global.appRoot + "/config.json"),
-      createRelatedChannels = require(global.appRoot + "/utils/createRelatedChannels.js");
+      createCityChannels = require(global.appRoot + "/utils/createCityChannels.js");
 
 exports.run = (sql, client, message, [command, ...args]) => {
     let city;
@@ -31,7 +31,7 @@ exports.run = (sql, client, message, [command, ...args]) => {
                                               console.error(err);
                                           }
 
-                                          createRelatedChannels.run(client, guild, role);
+                                          createCityChannels.run(client, guild, role);
 
                                           message.reply(`utworzono ${role.name}.\nJeśli chcesz dołączyć, użyj \`${config.prefix}miasto ${role.name}\``);
                                       });
@@ -67,7 +67,7 @@ exports.run = (sql, client, message, [command, ...args]) => {
 
                                           message.reply(`dodano do ${city}`);
 
-                                          createRelatedChannels.run(client, global.guild, role);
+                                          createCityChannels.run(client, global.guild, role);
                                       } else {
                                           message.reply(`już jesteś w ${city}`);
                                       }
@@ -79,7 +79,7 @@ exports.run = (sql, client, message, [command, ...args]) => {
 
                                           message.reply(`dodano do ${city}`);
 
-                                          createRelatedChannels.run(client, global.guild, role);
+                                          createCityChannels.run(client, global.guild, role);
                                       } else {
                                           message.reply(`już jesteś w ${city}`);
                                       }

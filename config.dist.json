@@ -13,5 +13,8 @@
   },
   "cities": {
     "defaultColor": "#eaf41a"
+  },
+  "groups": {
+    "defaultColor": "#eaf41a"
   }
 }
