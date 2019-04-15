@@ -1,5 +1,5 @@
 const config                = require(global.appRoot + "/config.json"),
-      createRelatedChannels = require(global.appRoot + "/utils/createRelatedChannels.js"),
+      createCityChannels = require(global.appRoot + "/utils/createCityChannels.js"),
       cityModule            = require(global.appRoot + "/modules/miasto/module.js");
 
 exports.run = (sql, client, message, args) => {
