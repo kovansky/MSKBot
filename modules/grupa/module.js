@@ -1,57 +1,58 @@
 const config                = require(global.appRoot + "/config.json"),
-      createCityChannels = require(global.appRoot + "/utils/createCityChannels.js");
+      createGroupChannels = require(global.appRoot + "/utils/createGroupChannels.js");
 
 exports.run = (sql, client, message, [command, ...args]) => {
-    let city;
+    let group;
 
     if(command !== undefined) {
         switch(command) {
             case "dodaj":
-                city = args.join(" ");
+                let color = args[1];
+                group = args[0];
 
                 sql.serialize(() => {
-                    sql.get("select id from cities where name = ?", [city], (err, row) => {
+                    sql.get("select id from groups where name = ?", [group], (err, row) => {
                         if(err) {
                             console.error(err);
                         }
 
-                        if(row === undefined && global.guild !== null && global.guild !== undefined && !global.guild.roles.find(role => role.name === city)) {
+                        if(row === undefined && global.guild !== null && global.guild !== undefined && !global.guild.roles.find(role => role.name === `grupa ${group}`)) {
                             let data = {
-                                name:        city,
-                                color:       config.cities.defaultColor,
+                                name:        `grupa ${group}`,
+                                color:       config.groups.defaultColor,
                                 mentionable: true
                             };
 
+                            if(color !== undefined) {
+                                data.color = color;
+                            }
+
                             global.guild.createRole(data)
                                   .then((role) => {
-                                      sql.run("insert into cities (name, role) VALUES (?, ?)", [
-                                          role.name, role.id
+                                      sql.run("insert into groups (name, role) VALUES (?, ?)", [
+                                          group, role.id
                                       ], (err) => {
                                           if(err) {
                                               console.error(err);
                                           }
 
-                                          createCityChannels.run(client, guild, role);
+                                          createGroupChannels.run(client, guild, "Warszawa", role);
 
-                                          message.reply(`utworzono ${role.name}.\nJeśli chcesz dołączyć, użyj \`${config.prefix}miasto ${role.name}\``);
+                                          message.reply(`utworzono grupę ${role.name}.\nJeśli chcesz do niej dołączyć, użyj \`${config.prefix}grupa ${group}\``);
                                       });
                                   })
                                   .catch(console.error);
                         } else {
-                            message.reply(`to miasto już istnieje`);
+                            message.reply(`ta grupa już istnieje`);
                         }
                     });
                 });
                 break;
             default:
                 sql.serialize(() => {
-                    city = command;
+                    group = command;
 
-                    if(args.length > 0) {
-                        city += " " + args.join(" ");
-                    }
-
-                    sql.get("select id, name, role from cities where name = ?", [city], (err, row) => {
+                    sql.get("select id, name, role from groups where name = ?", [group], (err, row) => {
                         if(err) {
                             console.error(err);
                         }
@@ -65,34 +66,34 @@ exports.run = (sql, client, message, [command, ...args]) => {
                                       if(!member.roles.has(role.id)) {
                                           member.addRole(role).catch(console.error);
 
-                                          message.reply(`dodano do ${city}`);
+                                          message.reply(`dodano do grupy ${group}`);
 
-                                          createCityChannels.run(client, global.guild, role);
+                                          createGroupChannels.run(client, global.guild, "Warszawa", role);
                                       } else {
-                                          message.reply(`już jesteś w ${city}`);
+                                          message.reply(`już jesteś w grupie ${group}`);
                                       }
-                                  } else if(global.guild !== null && global.guild !== undefined && global.guild.roles.find(role => role.name === city)) {
-                                      role = global.guild.roles.find(role => role.name === city);
+                                  } else if(global.guild !== null && global.guild !== undefined && global.guild.roles.find(role => role.name === `grupa ${group}`)) {
+                                      role = global.guild.roles.find(role => role.name === `grupa ${group}`);
 
                                       if(!member.roles.has(role.id)) {
                                           member.addRole(role).catch(console.error);
 
-                                          message.reply(`dodano do ${city}`);
+                                          message.reply(`dodano do grupy ${group}`);
 
-                                          createCityChannels.run(client, global.guild, role);
+                                          createGroupChannels.run(client, global.guild, "Warszawa", role);
                                       } else {
-                                          message.reply(`już jesteś w ${city}`);
+                                          message.reply(`już jesteś w ${group}`);
                                       }
 
-                                      sql.run("insert into cities (name, role) VALUES (?, ?)", [
-                                          city, role.id
+                                      sql.run("insert into groups (name, role) VALUES (?, ?)", [
+                                          group, role.id
                                       ], (err) => {
                                           if(err) {
                                               console.error(err);
                                           }
                                       });
                                   } else {
-                                      message.reply(`tego miasta jeszcze nie mamy.\nJeśli chcesz je dodać, wpisz \`${config.prefix}miasto dodaj ${city}\``);
+                                      message.reply(`taka grupa nie istnieje.`);
                                   }
                               })
                               .catch(console.error);
@@ -100,6 +101,6 @@ exports.run = (sql, client, message, [command, ...args]) => {
                 });
         }
     } else {
-        message.reply(`użyj \`${config.prefix}miasto [nazwa miasta]\`, aby dołączyć do miasta, lub \`${config.prefix}miasto dodaj [nazwa miasta]\`, aby utworzyć nieistniejące miasto.`);
+        message.reply(`użyj \`${config.prefix}grupa [nazwa grupy]\`, aby dołączyć do grupy.`);
     }
 };
